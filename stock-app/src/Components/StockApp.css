@@ -1,0 +1,68 @@
+@import url('https://fonts.googleapis.com/css?family=Teko&display=swap');
+
+body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+      "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+      sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    color: rgba(200, 200, 200, 0.9);
+    background: #121212;
+  }
+  
+  code {
+    font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
+      monospace;
+  }
+  
+  .chart-container {
+    position: relative;
+    margin: auto;
+    margin-top: 20px;
+    margin-bottom:20px;
+    box-shadow: 0 0 12px rgb(19, 20, 20);
+    border-radius: 5px;
+    background-color: rgba(200, 200, 200, 0.1);
+  }
+
+  
+* {box-sizing: border-box;}
+
+.title {
+  background-color: rgba(39, 199, 146, 0.2);
+  height: 6em;
+  box-shadow: 0 0 12px rgb(19, 20, 20);
+  padding: 1.0em 1.0em 1.0em 1.0em;
+}
+
+h1 {
+  color: rgba(200, 200, 200, 0.9);
+  font-size: 50px;
+  font-family: 'Teko', sans-serif;
+  margin: auto;
+  margin-left: 1em;
+}
+
+.topnav {
+  background-color: rgba(200, 200, 200, 0.1);
+  border-radius: 5px;
+  box-shadow: 0 0 12px rgb(19, 20, 20);
+}
+.search-container input[type=search] {
+  position: relative;
+  margin-top: 1.2em;
+  margin-left: 1em;
+  width: 30%;
+  margin-bottom: 1.2em;
+  box-sizing: border-box;
+  border: 0.1 vh solid #ccc;
+  font-size: 17px;
+  background-color: #eeeeee;
+  border-radius: 5px;
+  background-repeat: no-repeat;
+  padding: 8px 12px 8px 12px;
+  -webkit-transition: width 0.4s ease-in-out;
+  transition: width 0.4s ease-in-out;
+}
+

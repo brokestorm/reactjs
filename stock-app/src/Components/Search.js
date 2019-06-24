@@ -1,0 +1,29 @@
+import React from 'react';
+import './Search.css'
+//import { SearchBar } from 'react-native-elements';
+
+export default class Search extends React.Component {
+    state = {
+    search: '',
+  };
+
+  updateSearch = search => {
+    this.setState({ search });
+  };
+
+  render() {
+    const { search } = this.state;
+
+    return (
+      <form>
+        <input
+            type="text"
+            placeholder="Type Here..."
+            onChangeText={this.updateSearch}
+            value={search}
+        />
+      </form>
+
+    );
+  }
+}
