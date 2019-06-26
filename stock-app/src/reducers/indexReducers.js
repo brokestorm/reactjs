@@ -8,4 +8,4 @@ export default combineReducers ({
     dataReducer,
     symbolReducer,
     chartReducer
-})
+});
