@@ -4,7 +4,7 @@ import {isUndefined} from 'util';
 import StockCharts from './StockCharts';
 import Search from './Search';
 
-const KEY = '79LT1U32C3F71WIT';
+//@connect((store)=>{return {};})
 
 class StockApp extends React.Component {
     constructor(props){
@@ -12,137 +12,146 @@ class StockApp extends React.Component {
         this.state = {
             error: null,
             itemsIsLoaded: false,
-            infoIsLoaded: false,
             items: {},
-            info: {},
-            symbol: "MSFT",
-            symbolIsLoaded: false,
-            lastUpdate: null,
+            dataSearch: {},
+            information: {
+                symbol: null,
+                name: null,
+                lastRefreshed: null,
+            },
             func: 'TIME_SERIES_INTRADAY',
             interval: '5min',
             data: [],
-            xChart: 19,
-            search: '',
+            searchList: [],
+            key: '79LT1U32C3F71WIT',
         };
     }
 
+    changeSymbol(symbol){
+        this.setState({symbol});
+        this.fetchSearchData(symbol);
+    }
+
+    setItemLoad(){
+        this.setState({itemsIsLoaded: false});
+    }
 
     fillData(){
         let data = [];
-        const xChart = this.state.xChart;
         const items = this.state.items['Time Series (5min)'];
         let xAxis = [];
-        console.log(items);
         xAxis = Object.keys(items);
+        let xChart = xAxis.length;
+        
+        if(xChart > 50){
+            xChart = 50;
+        }
+
         let date = [];
         let open = [];
         let high = [];
         let low = [];
         let close = [];
         let volume = [];
-        let min = items[xAxis[2]]['1. open'];
-        let max = items[xAxis[2]]['1. open'];
-        for(let i = 0; i < xChart + 1; i++){
+
+        for(let i = 0; i < xChart; i++){
             let aux = new Date(xAxis[i]);
-            open[xChart - i] = items[xAxis[xChart - i]]['1. open'];
-            high[xChart - i] = items[xAxis[xChart - i]]['2. high'];
-            low[xChart - i] = items[xAxis[xChart - i]]['3. low'];
-            close[xChart - i] = items[xAxis[xChart - i]]['4. close'];
+            open[(xChart - 1) - i] = items[xAxis[(xChart - 1) - i]]['1. open'];
+            high[(xChart - 1) - i] = items[xAxis[(xChart - 1) - i]]['2. high'];
+            low[(xChart - 1) - i] = items[xAxis[(xChart - 1) - i]]['3. low'];
+            close[(xChart - 1) - i] = items[xAxis[(xChart - 1) - i]]['4. close'];
+            volume[(xChart - 1) - i] = items[xAxis[(xChart - 1) - i]]['5. volume'];
 
-            if(open[xChart - i] < min){
-                min = open[i];
-            }
-            if(high[xChart - i] < min){
-                min = high[i];
-            }
-            if(low[xChart - i] < min){
-                min = low[i];
-            }
-            if(close[xChart - i] < min){
-                min = close[i];
-            }
-
-            if(open[xChart - i] > max){
-                max = open[i];
-            }
-            if(high[xChart - i] > max){
-                max = high[i];
-            }
-            if(low[xChart - i] > max){
-                max = low[i];
-            }
-            if(close[xChart - i] > max){
-                max = close[i];
-            }
-
-            volume[xChart - i] = items[xAxis[xChart - i]]['5. volume'];
-            date[xChart - i] = aux.getHours() + ':' + aux.getMinutes();
+            date[(xChart - 1) - i] = aux.getHours() + ':' + aux.getMinutes();
             if(aux.getMinutes() === 0){
-                date[xChart - i] = date[xChart - i] + '0';
+                date[(xChart - 1) - i] = date[(xChart - 1) - i] + '0';
             }else if(aux.getMinutes() === 5){
-                date[xChart - i] = aux.getHours() + ':' +'0'+ aux.getMinutes();
+                date[(xChart - 1) - i] = aux.getHours() + ':0'+ aux.getMinutes();
             }
-            data[xChart - i] = {time: date[xChart - i], open: open[xChart - i], high: high[xChart - i], low: low[xChart - i], close: close[xChart - i], volume: volume[xChart - i], min: min, max: max};
-        }
 
-        //console.log(open);
-        console.log(min);
-        console.log(max);
-        //console.log(xAxis);
+            data[(xChart - 1) - i] = {time: date[(xChart - 1) - i], open: open[(xChart - 1) - i], high: high[(xChart - 1) - i], low: low[(xChart - 1) - i], close: close[(xChart - 1) - i], volume: volume[(xChart - 1) - i]};
+        }
         return(data);
     }
 
-    componentDidMount() {
-        let sym = this.state.symbol;
-        let lastUpdate = this.state.lastUpdate;
-        let func = this.state.func;
-        let interval = this.state.interval;
+    fetchData(symbol){
+        const sym = symbol;
+        const func = this.state.func;
+        const key = this.state.key;
+        const interval = this.state.interval;
+        let name = null;
         
-        fetch('https://www.alphavantage.co/query?function=' + func +'&symbol='+ sym +'&interval='+ interval +'&outputsize=full&apikey=' + KEY)
+        fetch('https://www.alphavantage.co/query?function=' + func +'&symbol='+ sym +'&interval='+ interval +'&outputsize=full&apikey=' + key)
             .then(response => {
                 if (response.ok) {
+                    console.log("FETCHING DATA!");
                     return response.json();
                 } else {
-                    throw new Error('Something went wrong ...');
+                    throw new Error('it Was not possible to fetch data');
                 }
             })
             .then(result => {
-                //console.log(JSON.stringify(result));
                 if(!isUndefined(result["Meta Data"])){
-                    this.setState({ itemsIsLoaded: true, items: result, });
-                    //console.log(JSON.stringify(result["Meta Data"]["2. Symbol"]));
+                    this.fetchSearchData(sym);
+                    const dataSearch = this.state.dataSearch;
+                    console.log(dataSearch);
+                    for(let i = 0; i < dataSearch["bestMatches"].length; i++){
+                        if(sym === dataSearch["bestMatches"][i]['1. symbol']){
+                            name = dataSearch["bestMatches"][i]["2. name"];
+                        }
+                    }
+                    var saoPauloTime = new Date(result["Meta Data"]["3. Last Refreshed"]).toLocaleString("en-US", {timeZone: "America/Sao_Paulo"});
+                    saoPauloTime = new Date(saoPauloTime);
+                    this.setState({ 
+                        itemsIsLoaded: true, 
+                        items: result,
+                        information: {
+                            symbol: sym,
+                            lastRefreshed: saoPauloTime.toString(),
+                            name: name,
+                        },
+                    });
+                    console.log("information: ", this.state.information );
                 }
             })
-            .catch(error => this.setState({ error, itemsIsLoaded: true }));
-                
-                
-
-        fetch("https://www.alphavantage.co/query?function=SYMBOL_SEARCH&keywords=${sym}&apikey=${key}")
-            .then(response => {
-                if (response.ok) {
-                    return response.json();
-                } else {
-                    throw new Error('Something went wrong ...');
-                }
-            })
-            .then(result => {
-                //console.log(JSON.stringify(data));
-                this.setState({ infoIsLoaded: true, info: result, });
-                //console.log(JSON.stringify(data["Meta Data"]["1. Information"]));
-            })
-            .catch(error => this.setState({ error, infoIsLoaded: true }));
-            
+            .catch(error => this.setState({ error, itemsIsLoaded: true }));            
 
     }
 
-    render(){
-        var {error, itemsIsLoaded, infoIsLoaded, items, info} = this.state;
+    fetchSearchData(symbol){
+        const key = this.state.key;
+        let list = [];
 
-        if(error){
-            return(
-                <div className="error">Error: {error.message}</div>
-            );
-        } else if (infoIsLoaded && !itemsIsLoaded){
+        fetch("https://www.alphavantage.co/query?function=SYMBOL_SEARCH&keywords="+ symbol +"&apikey=" + key)
+        .then(response => {
+            if (response.ok) {
+                //console.log("SEARCHING FOR SYMBOL!");
+                return response.json();
+            } else {
+                throw new Error('Was not possible to fetch the search data list');
+            }
+        })
+        .then(result => {
+            //console.log("URL: https://www.alphavantage.co/query?function=SYMBOL_SEARCH&keywords="+ symbol +"&apikey=" + key);
+            //console.log(result);
+            if(result["bestMatches"] !== ""){
+                for(let i = 0; i < result["bestMatches"].length; i++){
+                    list[i] = {name: "", symbol: ""};
+                    list[i].name = result["bestMatches"][i]["2. name"];
+                    list[i].symbol = result["bestMatches"][i]["1. symbol"];
+                }
+                //console.log(list);
+                
+                this.setState({dataSearch: result, searchList: list });
+            }
+        })
+        .catch(error => this.setState({ error }));
+    }
+
+    render(){
+        var {error, itemsIsLoaded, items, symbol, searchList} = this.state;
+
+        if (!itemsIsLoaded){
             return(
                 <div>
                     <div className = 'title'> 
@@ -150,12 +159,21 @@ class StockApp extends React.Component {
                     </div>
                     <div className='mainBox'>
                         <div className='topnav'>
-
+                            <Search 
+                                    symbol = {symbol}
+                                    fetchData = {this.fetchData.bind(this)}
+                                    searchList = {searchList}
+                                    changeSymbol ={this.changeSymbol.bind(this)}
+                            />
                         </div>
                     </div>
                 </div>
             );
-        } else if(itemsIsLoaded){
+        }else if (error){
+                return(
+                    <div className="error">Error: {error.message}</div>
+                );
+        } else {
             return(
                 <div>
                     <div className = 'title'> 
@@ -164,28 +182,29 @@ class StockApp extends React.Component {
                     </div>
                     <div className='mainBox'>
                         <div className='topnav'>
+                            <div>
                                 <Search 
-                                    ref={search => this.search = search}
+                                    symbol = {symbol}
+                                    fetchData = {this.fetchData.bind(this)}
+                                    searchList = {searchList}
+                                    changeSymbol ={this.changeSymbol.bind(this)}
                                 />
+                            </div>
+                            <div className="chart-title">
+                                <h1 id="symbol">{this.state.information.symbol}</h1>
+                                <h2 id="company">{this.state.information.name}</h2>
+                                <h3 id="time">{this.state.information.lastRefreshed}</h3>
+                            </div>
+
                         </div>
                         <div className='canvas'>
                             <StockCharts 
-                                symbol = {this.state.items["Meta Data"]["2. Symbol"]}
+                                symbol = {items["Meta Data"]["2. Symbol"]}
                                 data = {this.fillData()}
                             />
                         </div>
-                    </div>
-                </div>
-            );
-        } else {
-            return(
-                <div>
-                    <div className = 'title'> 
-                            <h1> STOCK MARKET PRICES</h1> 
-                    </div>
-                    <div className='mainBox'>
-                        <div className='topnav'>
-                            <div className='Loading'>...</div>
+                        <div>
+
                         </div>
                     </div>
                 </div>

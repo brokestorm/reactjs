@@ -1,28 +1,41 @@
 import React from 'react';
 import './Search.css'
-//import { SearchBar } from 'react-native-elements';
 
 export default class Search extends React.Component {
-    state = {
-    search: '',
-  };
+  handleChange(event) {
+    //console.log(event.target.value);
+    const symbol = event.target.value.toUpperCase();
+    if(symbol !== ""){
+      this.props.changeSymbol(symbol);
+    }
+  }
 
-  updateSearch = search => {
-    this.setState({ search });
-  };
+  handleSubmit(event){
+    //alert(this.props.symbol);
+    //console.log("Submitted:", this.props.symbol);
+    this.props.fetchData(this.props.symbol);
+    event.preventDefault();
+  }
 
   render() {
-    const { search } = this.state;
-
     return (
-      <form>
-        <input
-            type="text"
-            placeholder="Type Here..."
-            onChangeText={this.updateSearch}
-            value={search}
-        />
-      </form>
+      <div className={"search-container"}>
+        <form onSubmit={this.handleSubmit.bind(this)}>
+          <input 
+              type="text"
+              list="data"
+              required
+              autoFocus
+              placeholder="Type Here..."
+              onChange={this.handleChange.bind(this)}
+              value={this.props.symbol}
+          />
+          <datalist id="data">
+            {this.props.searchList.map((data) =>
+              <option key={data.symbol} value={data.symbol} onSubmit={this.handleSubmit.bind(this)}> {data.name} </option> )}
+          </datalist>
+        </form>
+      </div>
 
     );
   }
