@@ -1,0 +1,11 @@
+.chartTitle{
+    text-align: center;
+}
+
+LineChart{
+    float: left;
+}
+
+BarChart{
+    float: right;
+}
