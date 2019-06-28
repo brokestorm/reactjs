@@ -4,8 +4,10 @@ import dataReducer from "./dataReducer";
 import symbolReducer from "./symbolReducer";
 import chartReducer from "./chartReducer";
 
-export default combineReducers ({
+const rootReducer = combineReducers ({
     dataReducer,
     symbolReducer,
     chartReducer
 });
+
+export default rootReducer;

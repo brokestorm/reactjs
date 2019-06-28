@@ -1,26 +1,21 @@
-export default function reducer(state={
+import { CHANGE_CHART_DATA, CHANGE_TIME_FUNCTION, CHANGE_INTERVAL } from "../actions/chartActions";
+
+export default function chartReducer(state={
     timeFunc: 'TIME_SERIES_INTRADAY',
     interval: '5min',
     dataChart: [],
-    xAxis: 19,
 }, action) {
     switch(action.type) {
-        case "CHANGE_TIME_FUNCTION": {
-            state = {...state, timeFunction: action.payload}
-            break;
+        case CHANGE_TIME_FUNCTION: {
+            return Object.assign({}, state, {timeFunction: action.payload} );
         }
-        case "CHANGE_INTERVAL": {
-            state = {...state, interval: action.payload}
-            break;
+        case CHANGE_INTERVAL: {
+            return Object.assign({}, state, {interval: action.payload});
             }
-        case "CHANGE_CHART_DATA": {
-            state = {...state, chartData: action.payload}
-            break;
+        case CHANGE_CHART_DATA: {
+            return Object.assign({}, state, {chartData: action.payload});
         }
-        case "CHANGE_CHART_X_AXIS": {
-            state = {...state, xAxis: action.payload}
-            break;
-        }
+        default:
+            return state;
     }
-    return state;
 };

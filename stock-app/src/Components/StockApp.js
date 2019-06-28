@@ -4,8 +4,6 @@ import {isUndefined} from 'util';
 import StockCharts from './StockCharts';
 import Search from './Search';
 
-//@connect((store)=>{return {};})
-
 class StockApp extends React.Component {
     constructor(props){
         super(props);
@@ -24,8 +22,17 @@ class StockApp extends React.Component {
             data: [],
             searchList: [],
             key: '79LT1U32C3F71WIT',
+            open: null,
+            high: null,
+            low: null,
         };
     }
+
+    shouldComponentUpdate(nextState){
+        return (this.state !== nextState);
+
+    }
+
 
     changeSymbol(symbol){
         this.setState({symbol});
@@ -36,10 +43,10 @@ class StockApp extends React.Component {
         this.setState({itemsIsLoaded: false});
     }
 
-    fillData(){
+    fillData(items){
         let data = [];
-        const items = this.state.items['Time Series (5min)'];
         let xAxis = [];
+        var i = 0;
         xAxis = Object.keys(items);
         let xChart = xAxis.length;
         
@@ -47,31 +54,31 @@ class StockApp extends React.Component {
             xChart = 50;
         }
 
-        let date = [];
-        let open = [];
-        let high = [];
-        let low = [];
-        let close = [];
-        let volume = [];
+        let date;
+        let open;
+        let high;
+        let low;
+        let close;
+        let volume;
 
-        for(let i = 0; i < xChart; i++){
+        for(i; i < xChart; i++){
             let aux = new Date(xAxis[i]);
-            open[(xChart - 1) - i] = items[xAxis[(xChart - 1) - i]]['1. open'];
-            high[(xChart - 1) - i] = items[xAxis[(xChart - 1) - i]]['2. high'];
-            low[(xChart - 1) - i] = items[xAxis[(xChart - 1) - i]]['3. low'];
-            close[(xChart - 1) - i] = items[xAxis[(xChart - 1) - i]]['4. close'];
-            volume[(xChart - 1) - i] = items[xAxis[(xChart - 1) - i]]['5. volume'];
+            open = parseFloat(items[xAxis[(xChart - 1) - i]]['1. open']);
+            high = parseFloat(items[xAxis[(xChart - 1) - i]]['2. high']);
+            low = parseFloat(items[xAxis[(xChart - 1) - i]]['3. low']);
+            close = parseFloat(items[xAxis[(xChart - 1) - i]]['4. close']);
+            volume = parseInt(items[xAxis[(xChart - 1) - i]]['5. volume']);
 
-            date[(xChart - 1) - i] = aux.getHours() + ':' + aux.getMinutes();
+            date = aux.getHours() + ':' + aux.getMinutes();
             if(aux.getMinutes() === 0){
-                date[(xChart - 1) - i] = date[(xChart - 1) - i] + '0';
+                date = date + '0';
             }else if(aux.getMinutes() === 5){
-                date[(xChart - 1) - i] = aux.getHours() + ':0'+ aux.getMinutes();
+                date = aux.getHours() + ':0'+ aux.getMinutes();
             }
 
-            data[(xChart - 1) - i] = {time: date[(xChart - 1) - i], open: open[(xChart - 1) - i], high: high[(xChart - 1) - i], low: low[(xChart - 1) - i], close: close[(xChart - 1) - i], volume: volume[(xChart - 1) - i]};
+            data[(xChart - 1) - i] = {time: date, open: open, high: high, low: low, close: close, volume: volume};
         }
-        return(data);
+        this.setState({data: data, open: data[i-1]['open'], high: data[i-1]['high'], low: data[i-1]['low']});
     }
 
     fetchData(symbol){
@@ -111,7 +118,7 @@ class StockApp extends React.Component {
                             name: name,
                         },
                     });
-                    console.log("information: ", this.state.information );
+                    this.fillData(result['Time Series (5min)']);
                 }
             })
             .catch(error => this.setState({ error, itemsIsLoaded: true }));            
@@ -149,23 +156,19 @@ class StockApp extends React.Component {
     }
 
     render(){
-        var {error, itemsIsLoaded, items, symbol, searchList} = this.state;
+        const {error, itemsIsLoaded, items, symbol, searchList, data, open, high, low} = this.state;
 
         if (!itemsIsLoaded){
             return(
                 <div>
                     <div className = 'title'> 
                             <h1> STOCK MARKET PRICES</h1> 
-                    </div>
-                    <div className='mainBox'>
-                        <div className='topnav'>
                             <Search 
                                     symbol = {symbol}
                                     fetchData = {this.fetchData.bind(this)}
                                     searchList = {searchList}
                                     changeSymbol ={this.changeSymbol.bind(this)}
                             />
-                        </div>
                     </div>
                 </div>
             );
@@ -178,33 +181,30 @@ class StockApp extends React.Component {
                 <div>
                     <div className = 'title'> 
                         <h1> STOCK MARKET PRICES</h1> 
-                    
-                    </div>
-                    <div className='mainBox'>
-                        <div className='topnav'>
-                            <div>
-                                <Search 
+                        <Search 
                                     symbol = {symbol}
                                     fetchData = {this.fetchData.bind(this)}
                                     searchList = {searchList}
                                     changeSymbol ={this.changeSymbol.bind(this)}
-                                />
-                            </div>
-                            <div className="chart-title">
-                                <h1 id="symbol">{this.state.information.symbol}</h1>
-                                <h2 id="company">{this.state.information.name}</h2>
-                                <h3 id="time">{this.state.information.lastRefreshed}</h3>
-                            </div>
-
+                        />
+                    
+                    </div>
+                    <div className='mainBox'>
+                        <div className="chart-title">
+                            <h1 id="symbol">{this.state.information.symbol}</h1>
+                            <h2 id="company">{this.state.information.name}</h2>
+                            <h3 id="time">{this.state.information.lastRefreshed}</h3>
+                            <ul id="atributes">
+                                <li><b>Open:</b>   {open}</li>
+                                <li><b>High:</b>   {high}</li>
+                                <li><b>Low:</b>    {low}</li>
+                            </ul>
                         </div>
                         <div className='canvas'>
                             <StockCharts 
                                 symbol = {items["Meta Data"]["2. Symbol"]}
-                                data = {this.fillData()}
+                                data = {data}
                             />
-                        </div>
-                        <div>
-
                         </div>
                     </div>
                 </div>

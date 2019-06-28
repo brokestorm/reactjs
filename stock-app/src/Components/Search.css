@@ -1,10 +1,6 @@
 .search-container input[type=text] {
-    position: relative;
     margin: auto;
-    margin-top: 15px;
-    margin-left: 50px;
-    width: 20%;
-    margin-bottom: 15px;
+    width: 400px;
     font-size: 17px;
     background-color: #eeeeee;
     border-radius: 50px;
@@ -12,4 +8,5 @@
     padding: 8px 12px 8px 12px;
     -webkit-transition: width 0.4s ease-in-out;
     transition: width 0.4s ease-in-out;
+    outline: none;
   }
