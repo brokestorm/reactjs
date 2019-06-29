@@ -22,6 +22,7 @@ class StockApp extends React.Component {
             data: [],
             searchList: [],
             key: '79LT1U32C3F71WIT',
+            name: "",
         };
     }
 
@@ -45,7 +46,7 @@ class StockApp extends React.Component {
     }
 
     fillData(items){
-        const name = this.state.searchList[0].name;
+        const name = this.state.name;
         const symbol = this.state.symbolSubmitted;
         let data = [];
         let xAxis = [];
@@ -93,7 +94,6 @@ class StockApp extends React.Component {
         const func = this.state.func;
         const key = this.state.key;
         const interval = this.state.interval;
-        let name = null;
         
         fetch('https://www.alphavantage.co/query?function=' + func +'&symbol='+ sym +'&interval='+ interval +'&outputsize=full&apikey=' + key)
             .then(response => {
@@ -108,7 +108,7 @@ class StockApp extends React.Component {
                 if(!isUndefined(result["Meta Data"])) {
                     //var saoPauloTime = new Date(result["Meta Data"]["3. Last Refreshed"]).toLocaleString("en-US", {timeZone: "America/Sao_Paulo"});
                     //saoPauloTime = new Date(saoPauloTime);
-                    this.fillData(result['Time Series (5min)'], sym, name);                    
+                    this.fillData(result['Time Series (5min)']);                    
                 }
                 else {
                     console.log("I didn't fetch something valid: ", result);
@@ -121,6 +121,7 @@ class StockApp extends React.Component {
 
     fetchSearchData(symbol){
         const key = this.state.key;
+        let name;
         let list = [];
 
         fetch("https://www.alphavantage.co/query?function=SYMBOL_SEARCH&keywords="+ symbol +"&apikey=" + key)
@@ -134,11 +135,14 @@ class StockApp extends React.Component {
         .then(result => {
             if(result["bestMatches"] !== "" || !isUndefined(result) ){
                 for(let i = 0; i < result["bestMatches"].length; i++){
+                    if(symbol === result["bestMatches"][i]["1. symbol"]){
+                        name = result["bestMatches"][i]["1. symbol"];
+                    }
                     list[i] = {name: "", symbol: ""};
                     list[i].name = result["bestMatches"][i]["2. name"];
                     list[i].symbol = result["bestMatches"][i]["1. symbol"];
                 }               
-                this.setState({dataSearch: result["bestMatches"], searchList: list });
+                this.setState({dataSearch: result["bestMatches"], searchList: list, name});
             }
         })
         .catch(error => this.setState({ error }));
