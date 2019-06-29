@@ -9,7 +9,6 @@ class StockApp extends React.Component {
         super(props);
         this.state = {
             error: null,
-            itemsIsLoaded: false,
             chartObjs: [{
                 id: null,
                 symbol: null,
@@ -18,19 +17,11 @@ class StockApp extends React.Component {
             dataSearch: {},
             symbol: "",
             symbolSubmitted: undefined,
-            information: {
-                symbol: null,
-                name: null,
-                lastRefreshed: null,
-            },
             func: 'TIME_SERIES_INTRADAY',
             interval: '5min',
             data: [],
             searchList: [],
             key: '79LT1U32C3F71WIT',
-            open: null,
-            high: null,
-            low: null,
         };
     }
 
@@ -62,8 +53,8 @@ class StockApp extends React.Component {
         xAxis = Object.keys(items);
         let xChart = xAxis.length;
 
-        if(xChart > 50){
-            xChart = 50;
+        if(xChart > 200){
+            xChart = 200;
         }
 
         let date;
@@ -91,7 +82,6 @@ class StockApp extends React.Component {
             data[(xChart - 1) - i] = {time: date, open: open, high: high, low: low, close: close, volume: volume};
         }
         this.setState({ 
-            itemsIsLoaded: true,
             chartObjs: [...this.state.chartObjs, {id: Date.now(), symbol: symbol, name: name, data: data}],
             symbolSubmitted: '',
         });
@@ -122,9 +112,10 @@ class StockApp extends React.Component {
                 }
                 else {
                     console.log("I didn't fetch something valid: ", result);
+                    this.setState({symbolSubmitted: ""});
                 }
             })
-            .catch(error => this.setState({ error, itemsIsLoaded: true }));            
+            .catch(error => this.setState({ error }));            
 
     }
 
@@ -166,36 +157,35 @@ class StockApp extends React.Component {
 
     render(){
         const {chartObjs, symbol, searchList} = this.state;
-
-            return(
-                <div>
-                    <div className = 'title'> 
-                        <h1> STOCK MARKET PRICES</h1> 
-                        <Search 
-                                    symbol = {symbol}
-                                    fetchData = {this.fetchData.bind(this)}
-                                    searchList = {searchList}
-                                    changeSymbol ={this.changeSymbol.bind(this)}
-                                    submitSymbol ={this.submitSymbol.bind(this)}
-                        />
-                    </div>
-                    <div className='canvas'>
-                        <ul>
-                        {chartObjs.map( (item) => {
-                            if(item.id !== null){
-                                return(
+        return(
+            <div>
+                <div className = 'title'> 
+                    <h1> STOCK MARKET PRICES</h1> 
+                    <Search 
+                        symbol = {symbol}
+                        fetchData = {this.fetchData.bind(this)}
+                        searchList = {searchList}
+                        changeSymbol ={this.changeSymbol.bind(this)}
+                        submitSymbol ={this.submitSymbol.bind(this)}
+                    />
+                </div>
+                <div className='canvas'>
+                    <ul>
+                    {chartObjs.map((item) => {
+                        if(item.id !== null){
+                            return(
                                 <li id="charts" key= {item.id} onDoubleClick={this.onDeleteHandle.bind(this, item.id)}>
                                     <h2>{item.symbol}</h2>
                                     <h3>{item.name}</h3>
                                     <StockCharts key={item.id} data = {item.data} />
                                 </li>
-                                );
-                            }
-                        }) }
-                        </ul>
-                    </div>
+                            );
+                        }
+                    }) }
+                    </ul>
                 </div>
-            );
+            </div>
+        );
         
     }
 

@@ -16,16 +16,7 @@ body {
     font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
       monospace;
   }
-  
-  .chart-container {
-    position: relative;
-    margin: auto;
-    margin-top: 20px;
-    margin-bottom:20px;
-    box-shadow: 0 0 12px rgb(19, 20, 20);
-    border-radius: 5px;
-    background-color: rgba(200, 200, 200, 0.1);
-  }
+
 
   
 * {box-sizing: border-box;}
@@ -47,17 +38,6 @@ h1 {
   margin-top: -15px;
 }
 
-.chart-title {
-  background-color: rgba(200, 200, 200, 0.1);
-  border-radius: 5px;
-  box-shadow: 0 0 12px rgb(19, 20, 20);
-  margin:auto;
-  margin-top: 30px;
-  width: 1200px;
-  height: 280px;
-  padding: 10px;
-}
-
 #atributes{
   list-style: none;
   font-size: 20px;
@@ -69,12 +49,13 @@ h1 {
 
 #charts{
   float: left;
-  background: rgba(200, 200, 200, 0.1);
+  background: rgba(75, 112, 100, 0.1);
   border-radius: 15px;
-  padding: 10px;
-  box-shadow: 0 0 12px rgb(19, 20, 20);
+  padding: 5px;
+  box-shadow: 0px 12px 12px #000000;
   margin: 10px;
 }
+
 ul {
   list-style-type: none;
   overflow: hidden;
@@ -96,14 +77,16 @@ ul {
   margin: 0px;
   margin-top: -20px;
   margin-left: 20px;
+  margin-bottom: 10px;
   border: none;
   padding: 0;
 }
 
 .canvas {
+  
   margin: 0 auto;
   margin-top: 20px;
-  padding: 10px;
-  width: 90%;
+  padding: 0px;
+  width: 1160px;
   border-radius: 15px;
 }

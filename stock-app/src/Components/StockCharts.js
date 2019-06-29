@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import {
-  Line, Bar, Cell, XAxis, YAxis, Tooltip, Brush, ComposedChart, Label,
+  Line, Bar, Cell, XAxis, YAxis, Tooltip, ComposedChart,
 } from 'recharts';
 
 export default class Example extends PureComponent {
@@ -22,54 +22,8 @@ export default class Example extends PureComponent {
         return diff;
     }
 
-    getMaxVolume(data){
-        var max = 0;
-        var aux = 0;
-        for(let i = 0; i < data.length; i++){
-            aux = data[i]['volume'];
-            if(aux > max){
-                max = aux;
-            }
-        }
-
-        return max;
-    }
-
-    getMax(data){
-        var max = 0;
-        var high = 0;
-
-        for(let i = 0; i < data.length; i++){
-            high = data[i]['high'];
-
-            if(high > max){
-                max = high;
-            }
-        }
-
-        return max;
-    }
-
-    getMin(data){
-        var min = Infinity;
-        var low = Infinity;
-
-        for(let i = 0; i < data.length; i++){
-            if(data[i]['low'] < min){
-                min = low;
-            }
-        }
-
-        return min;
-    }
-
     render() {
         const data = this.props.data;
-        const symbol = this.props.symbol;
-
-        //const maxVol = this.getMaxVolume(data);
-        //const max = this.getMax(data);
-        //const min = this.getMin(data);
 
         const diff = this.getDiff(data);        
 
@@ -82,14 +36,13 @@ export default class Example extends PureComponent {
           
                 syncId="anyId"
                 margin={{
-                    top: 20, right: 20, left: 40, bottom: 20,
+                    top: 10, right: 10, left: 10, bottom: 10,
                 }}
                 >
                 
-                <XAxis dataKey="time" />
-                <YAxis yAxisId="left" domain={['auto', 'auto']}/>
-                <YAxis yAxisId="right" orientation="right" />
-                <Label value={symbol} offset={0} position="insideTopRight"/>
+                <XAxis dataKey="time" tick={false}/>
+                <YAxis yAxisId="left" domain={['auto', 'auto']} padding={{ bottom: 100, top: 10 }} tick={false}/>
+                <YAxis yAxisId="right" orientation="right" tick={false}/>
                 <Tooltip />
                 <Bar yAxisId="right" dataKey="volume" fill="#00cc00" >
                 {
@@ -99,7 +52,6 @@ export default class Example extends PureComponent {
                 }
                 </Bar>
                 <Line yAxisId="left" type="monotone" dataKey="close" stroke="#ff00ff" dot={false} />
-                <Brush height={10}/>
                 </ComposedChart>
             
       </div>
