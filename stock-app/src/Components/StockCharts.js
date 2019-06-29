@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import {
-  LineChart, Line, BarChart, Bar, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Brush
+  Line, Bar, Cell, XAxis, YAxis, Tooltip, Brush, ComposedChart, Label,
 } from 'recharts';
 
 export default class Example extends PureComponent {
@@ -65,16 +65,19 @@ export default class Example extends PureComponent {
 
     render() {
         const data = this.props.data;
-        const maxVol = this.getMaxVolume(data);
-        const max = this.getMax(data);
-        const min = this.getMin(data);
+        const symbol = this.props.symbol;
+
+        //const maxVol = this.getMaxVolume(data);
+        //const max = this.getMax(data);
+        //const min = this.getMin(data);
+
         const diff = this.getDiff(data);        
 
         return (
         <div>
-            <LineChart
-                width={1000}
-                height={1000}
+            <ComposedChart
+                width={500}
+                height={300}
                 data={data}
           
                 syncId="anyId"
@@ -82,39 +85,22 @@ export default class Example extends PureComponent {
                     top: 20, right: 20, left: 40, bottom: 20,
                 }}
                 >
-                <CartesianGrid strokeDasharray="3 3" />
+                
                 <XAxis dataKey="time" />
-                <YAxis domain ={[ min, max ] } />
+                <YAxis yAxisId="left" domain={['auto', 'auto']}/>
+                <YAxis yAxisId="right" orientation="right" />
+                <Label value={symbol} offset={0} position="insideTopRight"/>
                 <Tooltip />
-                <Legend />
-                <Line type="monotone" dataKey="close" stroke="#D90368" fill="#82ca9d" />
-                <Brush />
-            </LineChart>
-
-            <p>Volumes</p>
-            <BarChart
-                width={1000}
-                height={300}
-                data={data}
-
-                syncId="anyId"
-                margin={{
-                     top: 20, right: 20, left: 40, bottom: 20,
-                }}
-            >
-            <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="time" />
-                <YAxis domain ={[ 0, maxVol + 1000] } />
-                <Tooltip />
-                <Legend />
-                <Bar dataKey="volume" fill="#00cc00" >
+                <Bar yAxisId="right" dataKey="volume" fill="#00cc00" >
                 {
                     diff.map((entry, index) => (
-                        <Cell fill={entry === true ? '#00cc00' : '#ff1a1a'} key={`cell-${index}`} />
+                        <Cell fill={entry === true ? '#008000' : '#8b0000'} key={`cell-${index}`} />
                     ))
                 }
                 </Bar>
-            </BarChart>
+                <Line yAxisId="left" type="monotone" dataKey="close" stroke="#ff00ff" dot={false} />
+                <Brush height={10}/>
+                </ComposedChart>
             
       </div>
     );

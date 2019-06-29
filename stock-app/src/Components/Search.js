@@ -3,17 +3,12 @@ import './Search.css'
 
 export default class Search extends React.Component {
   handleChange(event) {
-    //console.log(event.target.value);
     const symbol = event.target.value.toUpperCase();
-    if(symbol !== ""){
       this.props.changeSymbol(symbol);
-    }
   }
 
   handleSubmit(event){
-    //alert(this.props.symbol);
-    //console.log("Submitted:", this.props.symbol);
-    this.props.fetchData(this.props.symbol);
+    this.props.submitSymbol(this.props.symbol);
     event.preventDefault();
   }
 

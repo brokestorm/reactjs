@@ -8,6 +8,7 @@ body {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     color: rgba(200, 200, 200, 0.9);
+    
     background: #121212;
   }
   
@@ -66,39 +67,43 @@ h1 {
   padding: 0;
 }
 
-#symbol{
+#charts{
+  float: left;
+  background: rgba(200, 200, 200, 0.1);
+  border-radius: 15px;
+  padding: 10px;
+  box-shadow: 0 0 12px rgb(19, 20, 20);
+  margin: 10px;
+}
+ul {
+  list-style-type: none;
+  overflow: hidden;
+}
+#charts h2{
   font-family: 'Teko', sans-serif;
-  font-size: 80px;
+  font-size: 50px;
   float: none;
   margin: 20px;
   margin-top: 0px;
-  margin-bottom: -40px;
+  margin-bottom: -20px;
   border: none;
   padding: 0;
 }
 
-#company{
-  font-size: 35px;
+#charts h3{
+  font-size: 15px;
   color: rgba(200, 200, 200, 0.6);
   margin: 0px;
   margin-top: -20px;
   margin-left: 20px;
-  margin-bottom: -30px;
-  border: none;
-  padding: 0;
-}
-
-#time{
-  font-size: 15px;
-  color: rgba(200, 200, 200, 0.4);
-  margin: 20px;
-  margin-top: 30px;
   border: none;
   padding: 0;
 }
 
 .canvas {
-  margin: auto;
-  margin-top: 30px;
-  width: 1000px;
+  margin: 0 auto;
+  margin-top: 20px;
+  padding: 10px;
+  width: 90%;
+  border-radius: 15px;
 }
