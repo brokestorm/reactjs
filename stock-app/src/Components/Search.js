@@ -2,32 +2,23 @@ import React from 'react';
 import './Search.css'
 
 export default class Search extends React.Component {
-  handleChange(event) {
-    const symbol = event.target.value.toUpperCase();
-      this.props.changeSymbol(symbol);
-  }
-
-  handleSubmit(event){
-    this.props.submitSymbol(this.props.symbol);
-    event.preventDefault();
-  }
 
   render() {
     return (
       <div className={"search-container"}>
-        <form onSubmit={this.handleSubmit.bind(this)}>
+        <form onSubmit={this.props.handleSubmit.bind(this)}>
           <input 
               type="text"
               list="data"
               required
               autoFocus
               placeholder="Type Here..."
-              onChange={this.handleChange.bind(this)}
+              onChange={this.props.handleChange.bind(this)}
               value={this.props.symbol}
           />
           <datalist id="data">
             {this.props.searchList.map((data) =>
-              <option key={data.symbol} value={data.symbol} onSubmit={this.handleSubmit.bind(this)}> {data.name} </option> )}
+              <option key={data.symbol} value={data.symbol} onSubmit={this.props.handleSubmit.bind(this)}> {data.name} </option> )}
           </datalist>
         </form>
       </div>

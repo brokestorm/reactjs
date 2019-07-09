@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import StockApp from './Components/StockApp';
+import StockAppContainer from './Components/StockAppContainer';
 import { Provider } from 'react-redux'
 import * as serviceWorker from './serviceWorker';
 import { createStore } from 'redux';
@@ -11,7 +11,7 @@ const store = createStore(rootReducer);
 
 ReactDOM.render(
 <Provider store={store}>
-    <StockApp />
+    <StockAppContainer />
 </Provider>
 , document.getElementById('root'));
 
