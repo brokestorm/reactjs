@@ -43,7 +43,6 @@ class StockChartsContainer extends PureComponent {
         return (
         <div>
             <StockCharts 
-
             data = {data}
             diff = {this.getDiff(data)}
             lineColor = {this.getColor(lineColor)}
