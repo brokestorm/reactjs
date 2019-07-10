@@ -1,9 +1,12 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import './Search.css'
 
-export default class Search extends React.Component {
-
+class Search extends React.Component {
+  
   render() {
+
+    const { symbolInput, searchList } = this.props;
     return (
       <div className={"search-container"}>
         <form onSubmit={this.props.handleSubmit.bind(this)}>
@@ -14,11 +17,12 @@ export default class Search extends React.Component {
               autoFocus
               placeholder="Type Here..."
               onChange={this.props.handleChange.bind(this)}
-              value={this.props.symbol}
+              value={symbolInput}
           />
           <datalist id="data">
-            {this.props.searchList.map((data) =>
-              <option key={data.symbol} value={data.symbol} onSubmit={this.props.handleSubmit.bind(this)}> {data.name} </option> )}
+            {searchList.map((data) =>
+              <option key={data.symbol} value={data.symbol} onSubmit={this.props.handleSubmit.bind(this)}> {data.name} </option> )
+            }
           </datalist>
         </form>
       </div>
@@ -26,3 +30,12 @@ export default class Search extends React.Component {
     );
   }
 }
+
+Search.propTypes = {
+  sym: PropTypes.string,
+  handleSubmit: PropTypes.func,
+  handleChange: PropTypes.func,
+  searchList: PropTypes.array,
+};
+
+export default Search;

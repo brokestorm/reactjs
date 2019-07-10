@@ -1,12 +1,19 @@
 .search-container input[type=text] {
-    margin: auto;
-    width: 400px;
-    font-size: 17px;
-    background-color: #eeeeee;
-    border-radius: 50px;
-    background-repeat: no-repeat;
-    padding: 8px 12px 8px 12px;
-    -webkit-transition: width 0.4s ease-in-out;
-    transition: width 0.4s ease-in-out;
-    outline: none;
-  }
+  width: 300px;  
+  margin: auto;
+  float: right;
+  font-size: 17px;
+  background-color: #eeeeee;
+  border-radius: 0;
+  background-repeat: no-repeat;
+  padding: 8px 12px 8px 12px;
+  -webkit-transition: width 0.4s ease-in-out;
+  transition: width 0.4s ease-in-out;
+  outline: none;
+}
+
+datalist {
+  border: none;
+  border-radius: 0;
+  outline: none;
+}

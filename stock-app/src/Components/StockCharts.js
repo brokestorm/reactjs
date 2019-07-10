@@ -1,7 +1,8 @@
 import React, { PureComponent } from 'react';
+import PropTypes from 'prop-types';
 import {  Line, Bar, Cell, XAxis, YAxis, Tooltip, ComposedChart } from 'recharts';
 
-export default class StockCharts extends PureComponent {
+class StockCharts extends PureComponent {
 
     render() {    
         return (
@@ -28,10 +29,18 @@ export default class StockCharts extends PureComponent {
                     ))
                 }
                 </Bar>
-                <Line yAxisId="left" type="monotone" dataKey="close" stroke="#ff00ff" dot={false} />
+                <Line yAxisId="left" type="monotone" dataKey="close" stroke={this.props.lineColor} dot={false} />
             </ComposedChart>
             
       </div>
     );
   }
 }
+
+
+StockCharts.propTypes = {
+    data: PropTypes.array,
+    diff: PropTypes.array,
+};
+
+export default StockCharts;

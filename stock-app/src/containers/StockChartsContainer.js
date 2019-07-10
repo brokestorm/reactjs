@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
-import StockCharts from "./StockCharts"
+import StockCharts from "../components/StockCharts";
 
-export default class StockChartsContainer extends PureComponent {
+class StockChartsContainer extends PureComponent {
 
     getDiff(data){
         var diff = []
@@ -20,8 +20,25 @@ export default class StockChartsContainer extends PureComponent {
         return diff;
     }
 
+    getColor(color){
+        console.log(color);
+        if(color === "Purple"){
+            return "#ff00ff";
+        }
+        else if(color === "Blue"){
+            return "#0044ff";
+        }
+        else if(color === "Orange"){
+            return "#ff5500";
+        }
+        else{
+            return "#ff00ff";
+        }
+    }
+
     render() {
         const data = this.props.data;      
+        const lineColor = this.props.lineColor;
 
         return (
         <div>
@@ -29,6 +46,7 @@ export default class StockChartsContainer extends PureComponent {
 
             data = {data}
             diff = {this.getDiff(data)}
+            lineColor = {this.getColor(lineColor)}
 
             />
             
@@ -36,3 +54,5 @@ export default class StockChartsContainer extends PureComponent {
     );
   }
 }
+
+export default StockChartsContainer;
